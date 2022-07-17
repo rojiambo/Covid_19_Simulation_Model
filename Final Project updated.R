@@ -1,10 +1,15 @@
 
 library(shiny)
+library(shinydashboard)
 library(shinythemes)
+library(shinyBS)
+library(shinyWidgets)
+library(DT)
 library(docstring)
 library(tidyverse)
 library(lubridate)
 library(plotly)
+
 
 
 
@@ -348,14 +353,18 @@ server <- function(input, output) {
 
    # function to download data
     
+    
+    
+    
      output$downloadCsv <- downloadHandler(
      filename = function() {
-     paste("COVID_Data_", cv_today$date[1], ".csv", sep="")
+     paste("COVID_Data_", Sys.Date(), ".csv", sep="")
          },
      
      content = function(file) {
                       
-     covid_sub = covid_data
+     covid_sub = covid_data%>% select(c(date, state, positive, negative, death, positiveTestsViral,
+                                        negativeTestsViral))
      names(covid_sub) = c("date", "state",  "positive_cases", "negative_cases", "deaths", "positive_viral_tests", "negative_viral_tests")
      write.csv(covid_sub, file)
          }
@@ -368,7 +377,7 @@ server <- function(input, output) {
      names(covid_sub) = c("date", "state",  "positive_cases", "negative_cases", "deaths", "positive_viral_tests", "negative_viral_tests")
      covid_sub = data.frame(covid_sub)
      
-     orig <- options(width = 1000)
+     orig <- options(width = 10000)
      print(tail(covid_sub, input$maxrows), row.names = FALSE)
      options(orig)
         })
