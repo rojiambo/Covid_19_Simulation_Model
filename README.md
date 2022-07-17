@@ -19,7 +19,7 @@ The information about COVID-19 and simulation with pooled testing is adapted fro
 - https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2767513?resultClick=3
 - https://www.kaggle.com/sudalairajkumar/covid19-in-usa?select=us_states_covid19_daily.csv
 
-*Corresponding csv File used for COVID-19 Data:*
+*Corresponding csv file used for COVID-19 Data:*
 - us_states_covid19_daily.csv
 
 We have also used the first 99 words of the Bee Movie script as a fun little joke while the shiny app simulates the data (since the calculations will take a while if the population size is large). The source code of the script is found here:
@@ -46,6 +46,7 @@ Require the following libraries: `shiny`, and `shinythemes` for generating inter
 server(input, output)
 ```
 Defines the server logic 
+
 ```r
 population <- function(df = df, state = "State", date = date) {
     #' Returns vector of 1's and 0's to simulate a population for COVID-19 Status
@@ -60,6 +61,7 @@ population <- function(df = df, state = "State", date = date) {
   }
 ```
 The population function is to create a vector with the size of the total amount of people who were tested in that day and state. Each person is assigned a value of 1 if they were tested negative and a value of 0 if they were tested positive.
+
 ```r
 pooled_test <- function(sample=c(), se=0, sp=0, size = 2) {
     #' Returns test result status for a particular pooled group
@@ -85,6 +87,7 @@ pooled_test <- function(sample=c(), se=0, sp=0, size = 2) {
   }
 ```
 The pooled_test function is to simulate a test for a group's pooled sample. To simulate the idea of pooling everything into one sample, all the values within the sample group vector have been multiplied together. If the resulting product is 1, then everyone in the group is a true negative. Otherwise, there exists at least one true positive in the group. Afterwards, a random number between 0 and 1 is sampled, and it is compared to the sensitivity or specificity level depending on if the product value is 0 or 1. From the if statements, either 1 or size + 1 is returned.
+
 ```r
 
 pooled_sample <- function(df=df,date=date, state=state, se=0,sp=0, size=2) {
@@ -116,6 +119,7 @@ pooled_sample <- function(df=df,date=date, state=state, se=0,sp=0, size=2) {
 This function simulates an entire test run for the entire day. First, the population function is used to grab the population for that state and day. Then a test counter is initialized. We then create a for loop that iterates for the amount of groups that can be created from our population vector (dictated by the size parameter). A group with length (size) is sampled without replacement, and this group goes through the pooled_test function to spit out a test value. This is then added to our test counter variable. The function returns the total test counter value after the for loop is over.
 
 Due to the sensitivity and specificity parameters, the results of this model is inherently random. This is why we have opted to run this model multiple times and display a histogram, to give a sense of the "distribution" of test results for each group size. 
+
 ```r
 binary_search <-function(df=df,date=date, state=state,se=0,sp=0) {
     #' Returns the estimated group size value that gives the lowest average tests conducted
