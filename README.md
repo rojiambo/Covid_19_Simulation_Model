@@ -1,5 +1,5 @@
 # Final Project
- # Simulation of Pool Testing to Identify Patients With Coronavirus Disease 2019 Under Conditions of Limited Test Availability
+ # Simulation of Pool Testing to Identify Patients With Coronavirus Disease 2019 Under Conditions of Limited Testing Availability
 
 
 ### Introduction ###
@@ -60,7 +60,7 @@ population <- function(df = df, state = "State", date = date) {
     #return vector with positive cases having values of 0, negatives with 1 
   }
 ```
-The population function is to create a vector with the size of the total amount of people who were tested in that day and state. Each person is assigned a value of 1 if they were tested negative and a value of 0 if they were tested positive.
+The population function is to create a vector with the size of the total amount of people who were tested in that day and state. Each person is assigned a value of 1 if they tested negative and a value of 0 if they tested positive.
 
 ```r
 pooled_test <- function(sample=c(), se=0, sp=0, size = 2) {
@@ -116,9 +116,9 @@ pooled_sample <- function(df=df,date=date, state=state, se=0,sp=0, size=2) {
     return(total_tests)
   }
 ```
-This function simulates an entire test run for the entire day. First, the population function is used to grab the population for that state and day. Then a test counter is initialized. We then create a for loop that iterates for the amount of groups that can be created from our population vector (dictated by the size parameter). A group with length (size) is sampled without replacement, and this group goes through the pooled_test function to spit out a test value. This is then added to our test counter variable. The function returns the total test counter value after the for loop is over.
+This function simulates an entire test run for the entire day. First, the population function is used to generate the population for that state and day. Then a test counter is initialized. We then use for loop that iterates in the amount of groups that can be created from our population vector (dictated by the size parameter). A group with length (size) is sampled without replacement, and this group goes through the pooled_test function to yield out a test value. This is then added to our test counter variable. The function returns the total test counter value after the for loop runs.
 
-Due to the sensitivity and specificity parameters, the results of this model is inherently random. This is why we have opted to run this model multiple times and display a histogram, to give a sense of the "distribution" of test results for each group size. 
+Due to the sensitivity and specificity parameters, the results of this model are inherently random. This is why we have opted to run this model multiple times and display a histogram, to give a sense of the "distribution" of test results for each group size. 
 
 ```r
 binary_search <-function(df=df,date=date, state=state,se=0,sp=0) {
@@ -172,7 +172,7 @@ binary_search <-function(df=df,date=date, state=state,se=0,sp=0) {
 ```
 This function tries to estimate the group size value that gives the lowest average tests conducted through an improvised version of binary search. First, the upper and lower bounds of where the minimum group size value can be found is defined. The lower bound will always be 2 since a group needs to be at least size 2, or else we wouldn't be doing a pooled sample test. The upper bound is 3/4th of the total population size, rounded up. The reason being is that if the group size is too high, then the average would be skewed due to the limited extreme values that are possible. For example, if we do a group with the max population size, the only 2 outcomes are 1 and size + 1, and the variability in simulations could result in a average that is among the lowest available. This would then give incorrect judgements for the binary search in the future, resulting in wrong results. Thus, we limit the upper bound and set it to 3/4 of the total population rounded up.
 
-After determining our bounds, we then calculate the average amount of test results for one end. Because trying to calculate the average with group size 2 is infeasible for high population sizes (potentially resulting in millions or maybe billions of iterations), we opt with calculating the average for the upper bound. A while loop is then conducted under the condition that the difference between the 2 bounds is greater than 1. The average test results of the median value rounded up is compared to the average test results of the upper bound within each iteration. If the results of the median is greater than our equal to the results of the upper bound, then this suggests that the group size value which gives the minimum average is to the right of the median. We thus change our lower bound to be this median value and move on to the next iteration. If the results of the median is less than the results of the upper bound, this suggests that the group size value which gives the minimum value is to the left of the median. We thus change our upper bound to this median, and use the median's average test results for future comparison. We then move on to the next iteration.
+After determining our bounds, we then calculate the average amount of test results for one end. Because trying to calculate the average with group size 2 is infeasible for high population sizes (potentially resulting in millions or maybe billions of iterations), we opt with calculating the average for the upper bound. A while loop is then used under the condition that the difference between the 2 bounds is greater than 1. The average test results of the median value rounded up is compared to the average test results of the upper bound within each iteration. If the results of the median is greater than or equal to the results of the upper bound, then this suggests that the group size value which gives the minimum average is to the right of the median. We thus change our lower bound to be this median value and move on to the next iteration. If the results of the median is less than the results of the upper bound, this suggests that the group size value which gives the minimum value is to the left of the median. We thus change our upper bound to this median, and use the median's average test results for future comparison. We then proceed with the next iteration.
 
 Because of the randomness of the pooled test model, this function is also inherently random, since there is no way to feasibly calculate the minimum average test results when the potential group sizes become large (and thus use the proper binary search function by comparing the absolute minimum value). Thus, in an attempt to circumvent this, we have also tried running this function multiple times to find the distribution of estimated group sizes that give the minimum average test results, and then picking the test result that gives the lowest average. 
 
