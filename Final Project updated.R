@@ -11,8 +11,6 @@ library(lubridate)
 library(plotly)
 
 
-
-
 # Define UI for application 
 ui <- fluidPage(theme = shinytheme("cerulean"),
   
@@ -56,7 +54,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
          
           br(),br(),hr(),
   
-          p(em("Developed by"),br(strong("Abraham Liu, Rophence Ojiambo and Anusha Kumar")),style="text-align:center; font-family: times")
+          p(em("Developed by"),br(strong("Rophence Ojiambo, Abraham Liu, and Anusha Kumar")),style="text-align:center; font-family: times")
   ),
     
     # Second tab panel          
@@ -349,13 +347,8 @@ server <- function(input, output) {
                    kvalues[which(averages == min(averages))], " "))
     })
     
-    
-
    # function to download data
-    
-    
-    
-    
+  
      output$downloadCsv <- downloadHandler(
      filename = function() {
      paste("COVID_Data_", Sys.Date(), ".csv", sep="")
@@ -412,8 +405,7 @@ server <- function(input, output) {
        state_positive_plot
        
      }) 
-     
-                  
+                       
 }
 
 # Run the application 
