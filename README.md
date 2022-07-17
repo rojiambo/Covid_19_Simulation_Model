@@ -3,28 +3,29 @@
 
 
 ### Introduction ###
-The novel coronavirus disease (COVID-19),resulting from the serious acute respiratory syndrome (SARS-CoV-2) virus is a highly contagious respiratory disease, first originating in the United States in January 2020.  With the widespread of COVID-19 pandemic, efforts have been made for efficient testing measures. The patients who are suspected to have COVID-19 go through a real-time reverse transcriptase–polymerase chain reaction - RT-PCR testing. (Source: https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2767513?resultClick=3). The aim of RT-PCR is to check for RNA detection of SARS-CoV-2. The increased request for the SARS-CoV-2 RT-PCR tests has led to a decreased supply of testing reagents. Hence, researchers are examining pooled testing measures from multiple patients. With the pooled testing, if the COVID-19  tests results are negative, then it can be concluded that all sampled individuals do not have COVID-19. However, if the pooled test results are positive, then the sample from every individual is seperately examined/tested. Pooled testing works best under limited testing conditions. However, if we examine sensitivity of the test (a measure which reflects patients with true positive tests), and observe a sensitivity under 100%, this results in the likelihood of false negatives. Therefore, it is important to examine a false negative risk by looking at three different criteria: the prevalence of COVID-19, the sensitivity of the COVID-19 tests, and the pool size of the patient.
+The novel coronavirus disease (COVID-19), resulting from the serious acute respiratory syndrome (SARS-CoV-2) virus is a highly contagious respiratory disease, first originating in the United States in January 2020. With the widespread of COVID-19 pandemic, efforts have been made for efficient testing measures. Patients suspected to have COVID-19 go through a real-time reverse transcriptase–polymerase chain reaction-RT-PCR testing. The aim of RT-PCR is to check for RNA detection of SARS-CoV-2. The increased request for the SARS-CoV-2 RT-PCR tests has led to a decreased supply of testing reagents. Hence, researchers are examining pooled testing measures from multiple patients. With pooled testing, if the COVID-19 tests results are negative, it can be concluded that all sampled individuals do not have COVID-19. However, if the pooled test results are positive, then the samples from every individual are seperately examined/tested. Pooled testing works best under limited testing conditions. However, if we examine sensitivity of the test (a measure which reflects patients with true positive tests), and observe a sensitivity under 100%, this results in the likelihood of false negatives. Therefore, it is important to examine the risk of a false negative by looking at three different criteria: the prevalence of COVID-19, the sensitivity of the COVID-19 tests, and the the sample size of the pooled patients.
+(Source: https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2767513?resultClick=3).
 
 ### COVID-19 Pooled Testing Analysis ###
-In the original model for pooled testing (Source: The JAMA Network), every individual in a group will mix their blood in one sample. In order to stimulate this, we assume that the status of positive and negative results are indeed true positives. Thus, we label negative results as 1, and positive results as 0. The product of all values will be the mixed blood result. If the mixed blood result contains solely negative samples, this will result in 1 (based on prior notation). Otherwise, the result will be 0. 
+In the original model for pooled testing (Source: The JAMA Network), every individual in a group will mix their blood in one sample. In order to simulate this, we assume that the status of positive and negative results are indeed true positives. Thus, we label negative results as 1, and positive results as 0. The product of all values will be the mixed blood result. If the mixed blood result contains solely negative samples, this will result in 1 (based on prior notation). Otherwise, the result will be 0. 
 
-Our shiny app for COVID-19 Pooled Testing provides users with a platform to implement pooled testing strategies from patients with suspected COVID-19 disease. The app stimulates running pooled tests. The number of positive and negative cases are gathered to create a population, as the user will be able to sample a random group sample size n. In addition, the user will specify the sensitivity (true positive rate) and specificity (true negative rate) levels for any state of their choice. Based on the values the user specifies, the population will be sampled without replacement and tested for either true negative or true positive pooled results. The stimulated model will return either a positive or negative result, which will determine the number of tests that need to be run. 
+Our shiny app for COVID-19 Pooled Testing provides users with a platform to implement pooled testing strategies from patients with suspected COVID-19 disease. The app simulates running pooled tests. The number of positive and negative cases are gathered to create a population, as the user will be able to sample a random group sample of size n. In addition, the user will specify the sensitivity (true positive rate) and specificity (true negative rate) levels for any state of their choice. Based on the values the user specifies, the population will be sampled without replacement and tested for either true negative or true positive pooled results. The simulated model will return either a positive or negative result, which will determine the number of tests that need to be run. 
 
 ### Datasets ###
 We have used Kaggle to get our datasets for "COVID-19 in USA." These datasets are originally adapted from the "New York Times" and the "COVID-19 Tracking Project."
 The information about COVID-19 and simulation with pooled testing is adapted from the "JAMA Network." The website links are also included below.
 
-Website Sources:
+*Website Sources:*
 - https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2767513?resultClick=3
 - https://www.kaggle.com/sudalairajkumar/covid19-in-usa?select=us_states_covid19_daily.csv
 
-Corresponding csv File Used for COVID-19 Data:
+*Corresponding csv File used for COVID-19 Data:*
 - us_states_covid19_daily.csv
 
 We have also used the first 99 words of the Bee Movie script as a fun little joke while the shiny app simulates the data (since the calculations will take a while if the population size is large). The source code of the script is found here:
 https://gist.github.com/ElliotGluck/64b0b814293c09999f765e265aaa2ba1
 
-Corresponding txt file used for the Bee Movie Script:
+*Corresponding txt file used for the Bee Movie Script:*
 - progresscheck.txt
 
 ### Data Generating Process ###
@@ -85,6 +86,7 @@ pooled_test <- function(sample=c(), se=0, sp=0, size = 2) {
 ```
 The pooled_test function is to simulate a test for a group's pooled sample. To simulate the idea of pooling everything into one sample, all the values within the sample group vector have been multiplied together. If the resulting product is 1, then everyone in the group is a true negative. Otherwise, there exists at least one true positive in the group. Afterwards, a random number between 0 and 1 is sampled, and it is compared to the sensitivity or specificity level depending on if the product value is 0 or 1. From the if statements, either 1 or size + 1 is returned.
 ```r
+
 pooled_sample <- function(df=df,date=date, state=state, se=0,sp=0, size=2) {
     #' Returns the total number of tests needed in a random simulation of the pooled-sample test model
     #' @param df dataframe, default dataframe with unspecified dimensions
