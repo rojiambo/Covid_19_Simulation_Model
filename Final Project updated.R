@@ -10,6 +10,8 @@ library(tidyverse)
 library(lubridate)
 library(plotly)
 
+data <- read.csv("us_states_covid19_daily.csv")
+text_about <- read.delim(("text_about"))
 
 # Define UI for application 
 ui <- fluidPage(theme = shinytheme("cerulean"),
@@ -63,42 +65,23 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
     
   # Sidebar panel for inputs ----
              sidebarPanel(
-            p("User to enter a specified value for group size",
-              style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-            # Input: numeric values for the group size ----
-             numericInput("k", "Group Size:", value = 10),
+            # State Input
+               selectInput(inputId = "State",label = "Select State:", unique(data$state)),
             
-            br(),
+            # Input: numeric values for the group size 
+             numericInput("k", "Select Group Size:", value = 10),
             
-            p("User to input an abbreviated state name",
-                     style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-            
-            # Input: text to indicate State
-             textInput(inputId = "State",
-                      label = "State Initial:",
-                      value = "CA"),
-            
+           
             # Input: Sliders to input sensitivity and specificity
             br(),
-            p("User to select a sensitivity value between 0 and 1",
-              style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-              sliderInput(inputId = "se",
-                        label = "Sensitivity:",
-                        min = 0,
-                        max = 1,
-                        value = 0.95),
+           
+            sliderInput(inputId = "se",label = "Select Sensitivity value:", min = 0, max = 1, value = 0.95),
             br(),
             
-            p("User to select a specificity value between 0 and 1",
-              style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-            sliderInput(inputId = "sp",
-                        label = "Specificity:",
-                        min = 0,
-                        max = 1,
-                        value = 0.99),
+            sliderInput(inputId = "sp",label = "Select Specificity value:", min = 0, max = 1, value = 0.95),
             
             # Input: select date in the format of YY-MM-DD
-            dateInput("date", label = strong("Date input"), value = "2020-03-04"),
+            dateRangeInput("date", label = strong("Select Date"), "2020-03-17", "2020-12-06"),
               
           
           
@@ -121,19 +104,21 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                  mainPanel(
                   tabsetPanel(
                     tabPanel("Covid Map",
-                          plotlyOutput("state_positive_plot"),
+                       plotlyOutput("state_positive_plot"),
                     ),
                    
                    # Displaying the data used
                  
-                    tabPanel("Data",
-                            numericInput("maxrows", "Rows to show", 25),
-                            verbatimTextOutput("rawtable"),
+                    tabPanel("Data Table",
+                            DT:: DTOutput("data_output"),
+                            tags$br(),
+                            
                             downloadButton("downloadCsv", "Download as CSV"),tags$br(),
                             tags$br(),
                             tags$br(),
-                            "The COVID-19 Data in USA from", strong("Kaggle"), "is adapted from the ", tags$a(href="https://www.kaggle.com/sudalairajkumar/covid19-in-usa?select=us_states_covid19_daily.csv", 
-                            "COVID-19 Tracking project and NY Times.")
+                            
+                           strong("The COVID-19 Data in USA from Kaggle is adapted from the"), tags$a(href="https://www.kaggle.com/sudalairajkumar/covid19-in-usa?select=us_states_covid19_daily.csv", 
+                                                                                                              "COVID-19 Tracking project and NY Times.")
                    
                 ))
               ))
@@ -143,7 +128,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 # Define server logic 
 server <- function(input, output) {
   
+
   # Data preparation - will only run once
+  
 
     covid <- read.csv("us_states_covid19_daily.csv")
     progress <- read.table("progresscheck.txt")
@@ -362,17 +349,15 @@ server <- function(input, output) {
      write.csv(covid_sub, file)
          }
         )
-                  
-     output$rawtable <- renderPrint({
+     # Data table output             
+     output$data_output <- DT:: renderDT({
      covid_sub = covid_data %>% select(c(date, state, positive, negative, death, positiveTestsViral,
                                negativeTestsViral))
      
      names(covid_sub) = c("date", "state",  "positive_cases", "negative_cases", "deaths", "positive_viral_tests", "negative_viral_tests")
      covid_sub = data.frame(covid_sub)
      
-     orig <- options(width = 10000)
-     print(tail(covid_sub, input$maxrows), row.names = FALSE)
-     options(orig)
+  
         })
      
      # Extracting state names, positive cases, deaths, and dates names from covid data frame
