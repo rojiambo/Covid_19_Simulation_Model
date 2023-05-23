@@ -179,3 +179,13 @@ Because of the randomness of the pooled test model, this function is also inhere
 ### Shiny App Website ### 
 https://rophenceojiambo.shinyapps.io/Covid_19_Simulation_Model/
 
+-------------------------------------------------------------
+## Collaborators
+
+[Abraham Liu](https://github.com/abrahamliu3759https://github.com/okutse)
+
+[Rophence Ojiambo](https://github.com/rophenceojiambo)
+
+[Anusha Kumar](https://github.com/akumar1246)
+
+-------------------------------------------------------------
