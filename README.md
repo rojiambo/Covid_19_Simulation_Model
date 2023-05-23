@@ -176,3 +176,6 @@ After determining our bounds, we then calculate the average amount of test resul
 
 Because of the randomness of the pooled test model, this function is also inherently random, since there is no way to feasibly calculate the minimum average test results when the potential group sizes become large (and thus use the proper binary search function by comparing the absolute minimum value). Thus, in an attempt to circumvent this, we have also tried running this function multiple times to find the distribution of estimated group sizes that give the minimum average test results, and then picking the test result that gives the lowest average. 
 
+### Shiny App Website ### 
+https://rophenceojiambo.shinyapps.io/Covid_19_Simulation_Model/
+
